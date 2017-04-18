@@ -15,6 +15,7 @@ class PrimeNumberTestCases(unittest.TestCase):
     
     def test_number_is_prime(self):
         self.assertEquals(prime_numbers(6), [2, 3, 5])
+        self.assertEquals(prime_numbers(2), [2])
 '''           
     def test_negative_integer(self):
         self.assertEquals(prime_numbers(-3), TypeError)
