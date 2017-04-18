@@ -1,0 +1,49 @@
+from nose.tools import *
+from ex47.game import Room
+
+
+def test_room():
+    gold = Room("GoldRoom",
+                """This room has gold in it you can grab. There's a
+                a door to the north.""")
+    assert_equal(gold.name, "GoldRoom")
+    assert_equal(gold.paths, {})
+    
+    d4 = Room('d4', 'my room at campus...my best room')
+    assert_equal(d4.name, 'd4')
+    assert_equal(d4.light, True)
+    assert_equal(d4.fav_spots, {})
+    
+def test_room_paths():
+    center = Room("Center", "Test room in the center.")
+    north = Room("North", "Test rooin the north")
+    south = Room("South", "Test room in the south")
+    
+    center.add_paths({'north': north, 'south': south})
+    assert_equal(center.go('north'), north)
+    assert_equal(center.go('south'), south)
+    
+def test_map():
+    start = Room("Start", "You can go west and down a hole.")
+    west = Room("Trees", "There are trees here, you can go east.")
+    down = Room("Dungeon", "It's dark down here, you can go up.")
+    
+    start.add_paths({'west': west, 'down': down})
+    west.add_paths({'east': start})
+    down.add_paths({'up': start})
+    
+    assert_equal(start.go('west'), west)
+    assert_equal(start.go('west').go('east'), start)
+    assert_equal(start.go('down').go('up'), start)
+    
+def test_light_switch():
+    d4 = Room('d4', 'my room at campus...my best room')
+    assert_equal(d4.switch_light('1'), True)
+    #assert_equal(d4.switch_light('3'), TypeError)
+    assert_equal(d4.switch_light('0'), False)
+    
+def test_show_fav_spots():
+    d4 = Room('d4', 'my room at campus...my best room')
+    d4.add_spot({'bathroom': 'Evil twin\'s fav', 'table': 'my fav'})
+    assert_equal(d4.show_fav_spots('bathroom'), 'Evil twin\'s fav')
+    assert_equal(d4.show_fav_spots('table'), 'my favouriteS')
